@@ -1,0 +1,115 @@
+﻿IBM DB2常用数据库管理命令
+命令行窗口
+
+#打开命令行窗口
+db2cmd
+#打开控制中心
+db2cmd db2cc
+#打开命令编辑器
+db2cmd db2ce
+
+操作数据库命令
+
+#启动数据库实例
+db2start
+#停止数据库实例
+db2stop 
+如果你不能停止数据库由于激活的连接，在运行db2stop前执行db2 force application all就可以了
+#创建数据库
+db2 create db [dbname]
+#连接到数据库 
+db2 connect to [dbname]  user [username] using [password]
+#断开数据库连接
+db2 connect reset
+#列出所有数据库 
+db2 list db directory 
+#列出所有激活的数据库 
+db2 list active databases 
+#列出所有数据库配置
+db2 get db cfg
+
+#列出所有数据库详细配置
+db2 get db cfg show detail
+
+#更新数据库配置
+
+db2 update db cfg for [dbname] using [paramtername] [parametervalue]
+#删除数据库
+db2 drop database [dbname]
+
+
+操作数据表命令
+
+#列出所有用户表
+db2 list tables
+#列出所有系统表
+db2 list tables for system
+#列出所有表
+db2 list tables for all
+#列出系统表
+db2 list tables for system
+#列出用户表
+db2 list tables for user
+#列出特定用户表
+db2 list tables for schema [user]
+
+#创建一个与数据库中某个表(t2)结构相同的新表(t1)
+db2 create table t1 like t2
+
+#将一个表t1的数据导入到另一个表t2
+
+db2 "insert into t1 select * from t2"
+
+#显示表结构
+db2 describe table tablename
+#修改列
+db2 alter table [tablename] alter column [columname] set data type varchar(24)
+
+数据表查询命令
+
+#一个最简单查询语句
+
+db2 "select * from [tablename]"
+
+ #带条件的查询语句
+
+db2 "select * from [tablename] where [columnname] = [value]"
+
+ #查询前n条数据
+
+db2 "select * from [tablename] fetch [n] rows only"
+
+ #查询第n条到第n+m数据，一般用于分页功能
+
+db2 "select * from (select *, (rownumber() over(order by [columnname])) as rownum from [tablename]) as [tablealiasname] where rownum between [n] and [n+m]"
+
+#包含case的查询语句
+
+db2 "select [col1], case when [col2]>0 then 1 when [col2]<0 then -1 else 0 end from [tablename]"
+
+数据表导入导出命令
+
+#导出命令
+
+db2 export to [file_name] of ixf select [column1,column2,...] from [tablename]
+db2   "EXPORT   TO   filename.csv   OF   DEL   SELECT   *   FROM   tablename"   
+
+#导入命令
+
+db2 import from [file_name)] of ixf insert into [tablename]
+
+#导入命令(如果数据量过大，则要加入commitcount参数如下)
+
+db2 import from [file_name] of ixf commitcount [n] insert into [tablename]
+
+脚本文件操作命令
+
+#执行脚本文件
+db2 -tvf scripts.sql
+
+帮助命令
+
+#查看命令帮助
+db2 ? db2start
+#查看错误码信息
+db2 ? 22001
