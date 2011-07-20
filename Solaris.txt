@@ -1,0 +1,3 @@
+Displaying a System's Installed Memory:		prtconf | grep Memory
+				MEMORY:		prtconf |grep size
+			     Swap size:		swap -s
